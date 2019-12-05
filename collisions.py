@@ -24,13 +24,13 @@ def write_package_conflicts(packages, file_name, **kwargs):
             f.write(f'{x}, {y}\n')
 
 
-def package_conflicts(packages, max_similarity_ratio=1/3):
+def package_conflicts(packages, max_similarity_ratio=1/3, max_distance=2):
     for package_x, package_y in product(packages, repeat=2):
         if package_x <= package_y:
             continue
         distance = jellyfish.damerau_levenshtein_distance(package_x, package_y)
         min_len = min(len(package_x), len(package_y))
-        if distance/min_len <= max_similarity_ratio:
+        if distance/min_len <= max_similarity_ratio and distance <= max_distance:
             yield package_x, package_y
 
 
